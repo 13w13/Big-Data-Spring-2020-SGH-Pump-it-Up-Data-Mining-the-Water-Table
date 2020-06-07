@@ -1,0 +1,10 @@
+base
+dplyr
+xgboost
+ggplot2
+plyr
+DataExplorer
+lattice
+caret
+randomForest
+DT

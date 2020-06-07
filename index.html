@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pump it Up - Data Mining the Water Table</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Pump it Up - Data Mining the Water Table">
+  <meta name="author" content="Simon Weiss">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/quiz/css/demo.css"></link>
+<link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="libraries/widgets/interactive/css/aceeditor.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+<link rel=stylesheet href="./assets/css/style.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+    
+  <slide class="nobackground">
+    <article class="flexbox vcenter">
+      <span>
+        <img width='300px' src="assets/img/Picture.jpg">
+      </span>
+    </article>
+  </slide>
+    <slide class="title-slide segue nobackground">
+  
+  <aside class="gdbar">
+    <img src="assets/img/Picture.jpg">
+  </aside>
+  
+  <hgroup class="auto-fadein">
+    <h1>Pump it Up - Data Mining the Water Table</h1>
+    <h2>Project - Big Data Spring 2020 - SGH</h2>
+    <p>Simon Weiss<br/>Graduate Student - Erasmus</p>
+  </hgroup>
+  
+    <a href="https://github.com/13w13/Pump-it-Up-Data-Mining-the-Water-Table/zipball/gh-pages" class="example">
+     Download
+    </a>
+  
+  <article></article>  
+  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  
+  <article data-timings="">
+    <style type="text/css">
+body {background:grey transparent;
+}
+</style>
+
+<h2>Overview</h2>
+
+<ol>
+<li>What led me to this project ?<br></li>
+<li>Goals for this presentation</li>
+<li>Problem Description</li>
+<li>Data processing </li>
+<li>EDA</li>
+<li>Feature Buildings</li>
+<li>Model Buildings</li>
+<li>Comparing models</li>
+<li>Conclusion</li>
+<li>References</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  
+  <hgroup>
+    <h2>What led me to this project ?</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li>Wanted to apply Big data method on the humanitarian sector and create an analytic value around one current issue.</li>
+<li>Found a rich dataset provided by <a href="https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/23/">Driven Data</a> offering an open challenge until 2021 with data compiled from  <a href="http://taarifa.org/">http://taarifa.org/</a> website and the Tanzanian Ministry of Water.</li>
+<li>Participate in an open - data challenge online.<br></li>
+<li>Build a data stand-alone project which responds to Project requirements and that makes first conclusions about predictions and highlights future improvements to be made to the scripts to improve model performance</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  
+  <hgroup>
+    <h2>Goal of this presentation</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li>Present major steps required for project requirement</li>
+<li>Present you the framework I implemented to handle one online data challenge and receive advice if any to improve it ! </li>
+<li><p>I had a little more time to prepare this presentation. I have used the package <a href="https://github.com/ramnathv/slidify">Slidify</a> which is a tool to create, customize and publish, reproducible HTML5 slide decks using R Markdown. </p></li>
+<li><p>You can follow this slide within your browser by clicking to this [link]. I will ask you a small participation in a slide ! </p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="segue quote dark" id="slide-4" style="background:;">
+  
+  <article data-timings="">
+    <p><q> &quot;Water is at the <span class = 'red'> core of sustainable development</span> and is critical for socio-economic development, energy and food production, healthy ecosystems and for human survival itself&quot; <cite>      UN Website - 2020 <cite> <q> </p>
+
+<style>
+.dark q {
+  color: white;
+}
+</style>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  
+  <hgroup>
+    <h2>Problem Description</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>The original goal is to predict whether a <strong>water pump</strong> is <strong>functional</strong>, <strong>functional but needs repairs</strong> or <strong>non functional</strong> based on a train dataset. </p></li>
+<li><p>This is an <strong>intermediate-level practice competition</strong> which allow us to train us to predict the operating condition of a water-point for each record in a dataset.</p></li>
+<li><p>A smart understanding of which water-points will fail can improve <strong>maintenance operations</strong> and ensure that <strong>clean, potable water is available</strong> to communities across Tanzania.</p></li>
+<li><p>Faced to an <strong>unsupervised classification problem</strong></p></li>
+<li><p>The metric used for the competition is <strong>classification rate</strong> ( percentage of rows where the predicted class y in the submission matches the actual class y in the test set).</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  
+  <article data-timings="">
+    <p>An example of a Water Pump - <a href="http://www.humanosphere.org/">http://www.humanosphere.org/</a></p>
+
+<p><img src="https://miro.medium.com/max/1200/0*BomKgCu3JWStGLm6.jpg" alt="An example of a Water Pump - http://www.humanosphere.org/"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="segue" id="slide-7" style="background:grey;">
+  
+  <hgroup>
+    <h1>I hope it is all clear from now. Let&#39;s dig it !</h1>
+  </hgroup>
+  
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-8" style="background:#EEE;">
+  
+  <hgroup>
+    <h2>Data processing</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul>
+<li>Get the data. 
+
+<ul>
+<li>Usually, a data challenge provides a train and test datasets with  test dataset target empty. Here the website, has separated train value and train labels ... </li>
+</ul></li>
+</ul>
+
+<pre><code class="r">train_value &lt;- read.csv(&quot;Trainingset_values.csv&quot;)
+train_labels &lt;-read.csv(&quot;Trainingset_label.csv&quot;)
+test_values &lt;- read.csv(&quot;Testset_value.csv&quot;)
+</code></pre>
+
+<ul>
+<li>We merge the train value and the train label ... </li>
+</ul>
+
+<pre><code class="r">train &lt;- merge(train_labels, train_value)
+test &lt;- test_values
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  
+  <article data-timings="">
+    <ul>
+<li class='..'>and plot the first 6 rows of our train dataset.<br></li>
+</ul>
+
+<iframe src="./assets/widgets/dt.html" width=100% height=100% allowtransparency="true"> </iframe>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  
+  <article data-timings="">
+    <ul>
+<li><p>The labels in this dataset are simple. There are three possible values:    </p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>functional</td>
+<td>the waterpoint is operational and there are no repairs needed</td>
+</tr>
+<tr>
+<td>functional needs repair</td>
+<td>the waterpoint is operational, but needs repairs</td>
+</tr>
+<tr>
+<td>non functional</td>
+<td>the waterpoint is not operational</td>
+</tr>
+</tbody></table></li>
+<li><p>Let us describe the number of each pumps in status group and their proportions : <code>Unbalanced dataset</code> ? </p>
+
+<pre><code>     functional functional needs repair          non functional 
+          32259                    4317                   22824 
+
+     functional functional needs repair          non functional 
+     0.54308081              0.07267677              0.38424242 
+</code></pre></li>
+</ul>
+
+<ul class = "build incremental">
+<li>Our dataset is pretty balanced but we can already notice that we have a great number of Missing values. We will see in future part how I managed it. First, let us do some EDA in order to better understand our data.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  
+  <hgroup>
+    <h2>Exploratory Data Analysis</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul>
+<li>Create 2 bar plots for quantity</li>
+</ul>
+
+<p><img src="assets/fig/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /><img src="assets/fig/unnamed-chunk-5-2.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  
+  <article data-timings="">
+    <ul>
+<li><p>Create bar plot for quality_group
+<img src="assets/fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" /></p></li>
+<li><p>Create bar plot for water point_type</p></li>
+</ul>
+
+<p><img src="assets/fig/unnamed-chunk-7-1.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  
+  <article data-timings="">
+    <ul>
+<li>Create histogram for all variables</li>
+</ul>
+
+<p><img src="assets/fig/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" /></p>
+
+<ul>
+<li>Create a histogram for construction_year grouped by status_group</li>
+</ul>
+
+<p><img src="assets/fig/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  
+  <hgroup>
+    <h2>Feature Buildings</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>Features building was maybe one of the most important part of my project. </p></li>
+<li><p>Very often in challenges, this part is a key part, allowing the models to really find performance. 
+In order, we will address the following problems: 
+<strong>reducing factor levels</strong>, <strong>handle missing and empty values</strong>. </p></li>
+<li><p>For feature engineering, it is better to combine training and the test sets together into <strong>one dataset</strong>. So I added a column subset in order to split the data later. </p></li>
+</ul>
+
+<pre><code class="r">train$subset = &quot;train&quot;
+test$subset = &quot;test&quot;
+test$status_group&lt;-&quot;&quot;
+data = rbind(train,test)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  
+  <hgroup>
+    <h2>Reducing factor levels</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <pre><code class="r">names(data)
+</code></pre>
+
+<ul class = "build incremental">
+<li><p>The data table contains an <code>ID column</code>, a <strong>subset indicator</strong>, <strong>a response column</strong> (status_group is functional, functional needs repair or non functional) and <strong>38 features.</strong></p></li>
+<li><p>Based on their names , we could conclude that some features have the same information but maybe at different levels (for example, extraction_type and extraction_type_group). </p></li>
+<li><p>For each grouping of features, we will keep both the coarser and the finer variables but <strong>group some of the smaller levels</strong> together so that categorical predictors have <strong>minimum levels</strong>. </p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  
+  <article data-timings="">
+    <ul>
+<li>First, we will reduce factor levels if the number of a factor is small and thus <strong>irrelevant.</strong>This code shows us in descending order of n the frequency of each <strong>factor level</strong> and then we have the proportion.</li>
+</ul>
+
+<pre><code class="r">data %&gt;%
+  group_by(extraction_type_class, extraction_type_group, extraction_type) %&gt;% tally(sort=TRUE)
+## # A tibble: 18 x 4
+## # Groups:   extraction_type_class, extraction_type_group [13]
+##    extraction_type_class extraction_type_group extraction_type               n
+##    &lt;fct&gt;                 &lt;fct&gt;                 &lt;fct&gt;                     &lt;int&gt;
+##  1 gravity               gravity               gravity                   33263
+##  2 handpump              nira/tanira           nira/tanira               10205
+##  3 other                 other                 other                      8102
+##  4 submersible           submersible           submersible                5982
+##  5 handpump              swn 80                swn 80                     4588
+##  6 motorpump             mono                  mono                       3628
+##  7 handpump              india mark ii         india mark ii              3029
+##  8 handpump              afridev               afridev                    2208
+##  9 submersible           submersible           ksb                        1790
+## 10 rope pump             rope pump             other - rope pump           572
+## 11 handpump              other handpump        other - swn 81              284
+## 12 wind-powered          wind-powered          windmill                    152
+## 13 handpump              india mark iii        india mark iii              135
+## 14 motorpump             other motorpump       cemo                        108
+## 15 handpump              other handpump        other - play pump           101
+## 16 handpump              other handpump        walimi                       60
+## 17 motorpump             other motorpump       climax                       41
+## 18 handpump              other handpump        other - mkulima/shinyanga     2
+</code></pre>
+
+<hr>
+
+<pre><code class="r">prop.table((table(data$extraction_type_class)))
+## 
+##      gravity     handpump    motorpump        other    rope pump  submersible 
+##  0.447986532  0.277602694  0.050868687  0.109117845  0.007703704  0.104673401 
+## wind-powered 
+##  0.002047138
+</code></pre>
+
+<p>We decide to class the small level to &quot;other&quot;, meaning rope pump, wind-powered to other. </p>
+
+<pre><code class="r">data$extraction_type_class[data$extraction_type_class==&quot;rope pump&quot;] &lt;- &quot;other&quot;
+data$extraction_type_class[data$extraction_type_class==&quot;wind-powered&quot;] &lt;- &quot;other&quot;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  
+  <article data-timings="">
+    <p>We will remove middle level extraction_type_group and combine some of the smaller levels. </p>
+
+<pre><code class="r">data = data %&gt;%mutate(extraction_type = revalue(extraction_type,
+                                     c(&quot;cemo&quot; = &quot;other motorpump&quot;,
+                                       &quot;climax&quot; = &quot;other motorpump&quot;,
+                                       &quot;other - mkulima/shinyanga&quot; = &quot;other handpump&quot;,
+                                       &quot;other - play pump&quot; = &quot;other handpump&quot;,
+                                       &quot;walimi&quot; = &quot;other handpump&quot;,
+                                       &quot;other - swn 81&quot; = &quot;swn&quot;,
+                                       &quot;swn 80&quot; = &quot;swn&quot;,
+                                       &quot;india mark ii&quot; = &quot;india mark&quot;,
+                                       &quot;india mark iii&quot; = &quot;india mark&quot;))) %&gt;%select( - extraction_type_group ) 
+</code></pre>
+
+<ul class = "build incremental">
+<li>I have done the same process for following variables : <strong>&quot;quality_group&quot;</strong>, <strong>remove waterpoint_type_group.</strong>, <strong>payment_type</strong>, <strong>Scheme_name</strong>, <strong>recorded by</strong>, <strong>ward variable and wpt-name</strong>, <strong>subvillage</strong>, <strong>lga</strong>. </li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  
+  <hgroup>
+    <h2>Remove Missing value</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul>
+<li>One difficulty in our dataset is that there is no <strong>clear missing values</strong> but only zeros. However, for some variables, it seems that having 0 in observation is not possible and can be seen as a missing value :<br>
+funder, installer, gps_height, population, construction_year, and possibly, amount_tsh, latitude and longitude (given to the fact that Tanzania geographical position).   We should <strong>re-code</strong> those variable to NA. </li>
+</ul>
+
+<pre><code class="r">data = data %&gt;%
+  mutate(gps_height = ifelse(gps_height == 0, NA, gps_height)) %&gt;%
+  mutate(population = ifelse(population == 0, NA, population)) %&gt;%
+  mutate(amount_tsh = ifelse(amount_tsh == 0, NA, amount_tsh)) %&gt;%
+  mutate(longitude = ifelse(longitude == 0, NA, longitude)) %&gt;%
+  mutate(latitude = ifelse(latitude == 0, NA, latitude)) %&gt;%
+  mutate(construction_year = ifelse(construction_year == 0, NA, construction_year))
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li>Let us plot <strong>missing values distribution</strong>. 
+<img src="assets/fig/unnamed-chunk-18-1.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" style="display: block; margin: auto;" /></li>
+<li>We can observe that amount_tsh has a lot of NA and this variable is not very clear for the reader. We should <strong>remove it.</strong> </li>
+</ul>
+
+<pre><code class="r">data = data %&gt;% select( - amount_tsh)
+</code></pre>
+
+<ul class = "build incremental">
+<li><p>Then we have population and gps_height variables with more than 30 % of NA. Since these last variables contain important information, we should <strong>keep them</strong>. </p></li>
+<li><p>Since we will use Random Forest models, we have to <strong>re-code NA values to zeros</strong>. </p></li>
+</ul>
+
+<pre><code class="r">data[is.na(data)] &lt;- 0
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  
+  <article data-timings="">
+    <p>We still have <strong>empty rows</strong> that we should resolve.</p>
+
+<pre><code class="r">data$permit&lt;- as.character(data$permit)
+data$permit[data$permit==&quot;&quot;]&lt;-&quot;unknown&quot;
+data$permit&lt;-as.factor(data$permit)
+data$scheme_management&lt;- as.character(data$scheme_management)
+data$scheme_management[data$scheme_management==&quot;&quot;]&lt;-&quot;unknown&quot;
+data$scheme_management&lt;-as.factor(data$scheme_management)
+data$public_meeting&lt;- as.character(data$public_meeting)
+data$public_meeting[data$public_meeting==&quot;&quot;]&lt;-&quot;unknown&quot;
+data$public_meeting&lt;-as.factor(data$public_meeting)
+</code></pre>
+
+<ul class = "build incremental">
+<li><p>This ends our feature <strong>feature building part</strong>. I tried to take time for this part in our presentation as it important in data competition and in order to share methods. </p></li>
+<li><p>We are now ready to build our models ! </p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  
+  <hgroup>
+    <h2>Building models</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>First, we should <strong>unsplit</strong> data to build our <strong>final dataset</strong> and clean our environment for a peaceful mind. </p>
+
+<pre><code class="r">trainset&lt;-data[data$subset==&quot;train&quot;,]
+testset&lt;-data[data$subset==&quot;test&quot;,]
+trainset&lt;-trainset[-28]
+testset&lt;-testset[-28]
+</code></pre>
+
+<pre><code class="r">rm(train)
+rm(test)
+rm(test_values)
+rm(train_labels)
+rm(train_value)
+</code></pre>
+
+<p>When I applied my first models, it should be noted that I faced a factor and subseting problem. I found a solution by applying <strong>str</strong> and <strong>drop levels</strong> to our unsplit datasets.  </p>
+
+<pre><code class="r">str(data$status_group)
+str(trainset$status_group)
+str(trainset$status_group)
+
+table(data$status_group)
+table(trainset$status_group)
+table(trainset$status_group)
+
+trainset$status_group&lt;-droplevels(trainset$status_group)
+table(trainset$status_group)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  
+  <hgroup>
+    <h2>Tree 1 : Random Forest</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>Random Forest reduces the variance of forecasts in a decision tree alone, thus improving performance. It does this by combining n decision trees in a <strong>bagging approach</strong>. We don&#39;t prune the tree. Each tree in the random forest is trained on a <strong>random subset</strong> of data. The predictions are then averaged.</p></li>
+<li><p>I have build model on the <strong>train</strong> dataset with following parameters : </p></li>
+<li><p>randomForest(status_group~.,data=trainset, ntree=300, do.trace=T)</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li>This graph comes from our first model and plot the importance of variable in our model. 
+<img src="./assets/img/tree1.imp.png" alt="Mean Decrease Gini"></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li>The second graph shows the evolution of error compared to the number of trees. </li>
+</ul>
+
+<p><img src="./assets/img/error1.png" alt="Error evolution"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  
+  <article data-timings="">
+    <ul>
+<li>We can apply our models on our testset and create our first submission file.</li>
+</ul>
+
+<p><img src="./assets/img/predict1.png" alt="Predict 1"></p>
+
+<ul class = "build incremental">
+<li><p>We will see in our last part what were the results.</p></li>
+<li><p>In order to compare the models, we will build another Tree. </p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  
+  <hgroup>
+    <h2>Tree 2 : Boosted Tree</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>Here we will use Boosted Tree aka XGBoost. XGBoost is a well-known and efficient open source implementation of the improved gradient tree algorithm.</p></li>
+<li><p>We are building a tree and looks which value is predicted poorly and assign to it higher weigh in our prediction.</p></li>
+<li><p>Let us build and predict our model with 1000 maximum number of boosting iterations with following parameters : 
+xgboost::xgboost(data=data.matrix(trainset[,-2]),label=trainset[,2],nrounds=1000,params=list(booster=&quot;gbtree&quot;, eta=0.10, max_depth = 3, subsample = 0.50, colsample_bytree=0.50))</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  
+  <article data-timings="">
+    <ul>
+<li>Let&#39;s apply our model and create a second submission file.</li>
+</ul>
+
+<p><img src="./assets/img/predict2.png" alt="Predict 2"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  
+  <hgroup>
+    <h2>Upload results and Comparing models</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>I upload first submission of Random Forest to the <a href="https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/23/">Driven Data Platform</a></p>
+
+<p><img src="./assets/img/upload.png" alt="Upload.png"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  
+  <article data-timings="">
+    <ul>
+<li>For recall, Primary Evaluation Metric is Classification Rate
+\[
+\frac{1}{N} \sum_{i=0}^N I(y_i = \hat{y_i})
+\]
+It calculates the percentage of rows where the predicted class y^ in the submission matches the actual class, y in the test set. The maximum is 1 and the minimum is 0. The goal is to maximize the classification rate.<br></li>
+</ul>
+
+<ul class = "build incremental">
+<li>Before we see finally our results, a quick quiz ! </li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  
+  <hgroup>
+    <h2>Quiz : Random Forest performance</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    
+<div class="quiz quiz-single well ">
+  <p>In your opinion, according to this presentation, what is the rank x of our first model out of the 9000 registered on the platform to date? </p>
+
+<ol>
+<li><em>1&lt;x&lt;1000</em></li>
+<li>1000&lt;x&lt;3000</li>
+<li>3000&lt;x&lt;9000</li>
+</ol>
+
+  <button class="quiz-submit btn btn-primary">Submit</button>
+  <button class="quiz-toggle-hint btn btn-info">Show Hint</button>
+  <button class="quiz-show-answer btn btn-success">Show Answer</button>
+  <button class="quiz-clear btn btn-danger">Clear</button>
+  
+  
+<div class="quiz-hint">
+  <p>Our model didn&#39;t do so bad ! </p>
+
+</div>
+
+<div class="quiz-explanation">
+  <p><img src="./assets/img/1stresult.png" alt="Upload.png"></p>
+
+</div>
+</div>
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  
+  <hgroup>
+    <h2>Quiz : Boosted Tree performance</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    
+<div class="quiz quiz-single well ">
+  <p>In your opinion, according to this presentation, has Boosted Tree better results ? </p>
+
+<ol>
+<li><em>Yes</em></li>
+<li>No</li>
+</ol>
+
+  <button class="quiz-submit btn btn-primary">Submit</button>
+  <button class="quiz-toggle-hint btn btn-info">Show Hint</button>
+  <button class="quiz-show-answer btn btn-success">Show Answer</button>
+  <button class="quiz-clear btn btn-danger">Clear</button>
+  
+  
+<div class="quiz-hint">
+  <p>Random Forest had 300 iteration when Boosted Tree had 1000 maximum number of boosting iteration.  </p>
+
+</div>
+
+<div class="quiz-explanation">
+  <p><img src="./assets/img/2stclass.png" alt="Upload.png"></p>
+
+</div>
+</div>
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  
+  <hgroup>
+    <h2>Conclusion</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <blockquote>
+<p>-Our second tree returned a better metric with <strong>0.8179</strong>. This small increase has moved us up <strong>15 places</strong> in the competition.</p>
+
+<p>-So <strong>Boosted Tree</strong> was the best Tree model to predict whether a water pump is functional, functional but needs repairs or non functional.</p>
+
+<p>-I decided to stop here as the 2 models gave almost the same results meaning that one should move again to <strong>feature building</strong> (any recommendation or ideas is welcome) so as to <strong>maximize Classification Rate</strong>.</p>
+
+<p>-<strong>Thank you for your attention</strong> !</p>
+</blockquote>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  
+  <hgroup>
+    <h2>References</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul>
+<li>Dr Jaroslaw Jozef Olejniczak- Big Data - SGH Spring 2020<br></li>
+<li>Community of Driven Data <a href="https://community.drivendata.org/c/pump-it-up-data-mining-the-water-table">https://community.drivendata.org/c/pump-it-up-data-mining-the-water-table</a></li>
+<li>Stack Overflow community</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  
+  <hgroup>
+    <h2>Questions ?</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p><br />
+<center>
+<img src="./assets/img/question.jpg" style="width:80%;">
+</center></p>
+
+<p><font size="2">photo from  <a href="http://www.bookcovercafe.com/independent-publishing-q-and-a-series-01/">http://www.bookcovercafe.com/independent-publishing-q-and-a-series-01/</a></font></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='NA'>
+         1
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='What led me to this project ?'>
+         2
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Goal of this presentation'>
+         3
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='NA'>
+         4
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Problem Description'>
+         5
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='NA'>
+         6
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='I hope it is all clear from now. Let&#39;s dig it !'>
+         7
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Data processing'>
+         8
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='NA'>
+         9
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='NA'>
+         10
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Exploratory Data Analysis'>
+         11
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='NA'>
+         12
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='NA'>
+         13
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Feature Buildings'>
+         14
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Reducing factor levels'>
+         15
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='NA'>
+         16
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='NA'>
+         17
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Remove Missing value'>
+         18
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='NA'>
+         19
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='NA'>
+         20
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Building models'>
+         21
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Tree 1 : Random Forest'>
+         22
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='NA'>
+         23
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='NA'>
+         24
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='NA'>
+         25
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Tree 2 : Boosted Tree'>
+         26
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='NA'>
+         27
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='Upload results and Comparing models'>
+         28
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='NA'>
+         29
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='Quiz : Random Forest performance'>
+         30
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='Quiz : Boosted Tree performance'>
+         31
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Conclusion'>
+         32
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='References'>
+         33
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='Questions ?'>
+         34
+      </a>
+    </li>
+    
+    </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/quiz/js/jquery.quiz.js"></script>
+<script src="libraries/widgets/quiz/js/mustache.min.js"></script>
+<script src="libraries/widgets/quiz/js/quiz-app.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+<script src="libraries/widgets/interactive/js/ace/js/ace.js"></script>
+<script src="libraries/widgets/interactive/js/opencpu-0.5.js"></script>
+<script src="libraries/widgets/interactive/js/interactive.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  
+<script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+
+  
+  <script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
