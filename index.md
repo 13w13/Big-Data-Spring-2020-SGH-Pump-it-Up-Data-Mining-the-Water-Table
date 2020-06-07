@@ -55,7 +55,7 @@ body {background:grey transparent;
 > - Present you the framework I implemented to handle one online data challenge and receive advice if any to improve it ! 
 > - I had a little more time to prepare this presentation. I have used the package [Slidify](https://github.com/ramnathv/slidify) which is a tool to create, customize and publish, reproducible HTML5 slide decks using R Markdown. 
 
-> - You can follow this slide within your browser by clicking to this [link]. I will ask you a small participation in a slide ! 
+> - You can follow this slide within your browser by clicking to this [link](https://13w13.github.io/Big-Data-Spring-2020-SGH-Pump-it-Up-Data-Mining-the-Water-Table/#1). I will ask you a small participation in a slide ! 
 
 
 --- .segue .quote .dark
@@ -435,7 +435,7 @@ table(trainset$status_group)
 
 I upload first submission of Random Forest to the [Driven Data Platform](https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/23/)
 
-![Upload.png](./assets/img/upload.png)
+![Upload.png](./assets/img/Upload.png)
 
 ---
 
